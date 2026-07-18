@@ -92,6 +92,9 @@ public class EngineeringConsultantApp {
     @Resource
     private VectorStore ecAppVectorStore;
 
+    @Resource
+    private VectorStore pgVectorVectorStore;
+
     /**
      * 和 RAG 知识库进行对话
      * @param message
@@ -107,6 +110,8 @@ public class EngineeringConsultantApp {
                 .advisors(new MyLoggerAdvisor())
                 // 应用 RAG 知识库问答
                 .advisors(QuestionAnswerAdvisor.builder(ecAppVectorStore).build())
+                // 应用 RAG 检索增强服务 （基于 PGVector 向量存储）
+                //.advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
