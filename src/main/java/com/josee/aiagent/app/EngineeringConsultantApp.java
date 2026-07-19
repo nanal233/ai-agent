@@ -122,13 +122,13 @@ public class EngineeringConsultantApp {
                 // 应用 RAG 检索增强服务 （基于 PGVector 向量存储）
                 //.advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
                 /**
-                 *  应用自定义的 RAG 检索增强服务 （文档查询器 + 上下文增强） 测试版本不兼容
+                 *  应用自定义的 RAG 检索增强服务 （文档查询器 + 上下文增强）
                  */
-//                .advisors(
-//                        ECAppRagCustomAdvisorFactory.createECAppRagCustomAdvisor(
-//                                ecAppVectorStore, "重构"
-//                        )
-//                )
+                .advisors(
+                        ECAppRagCustomAdvisorFactory.createECAppRagCustomAdvisor(
+                                ecAppVectorStore, "项目初期选型"
+                        )
+                )
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();
