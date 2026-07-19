@@ -32,6 +32,7 @@ public class ECAppRagCustomAdvisorFactory {
                 .build();
         return RetrievalAugmentationAdvisor.builder()
                 .documentRetriever(documentRetriever)
+                .queryAugmenter(ECAppContextualQueryAugmenterFactory.createInstance())
                 .build();
     }
 }
