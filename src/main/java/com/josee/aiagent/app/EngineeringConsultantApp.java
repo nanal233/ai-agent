@@ -2,6 +2,8 @@ package com.josee.aiagent.app;
 
 import com.josee.aiagent.advisor.MyLoggerAdvisor;
 import com.josee.aiagent.chatmemory.FileBasedChatMemory;
+import com.josee.aiagent.rag.ECAppRagCustomAdvisorFactory;
+import com.josee.aiagent.rag.QueryRewriter;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -95,6 +97,9 @@ public class EngineeringConsultantApp {
     @Resource
     private VectorStore pgVectorVectorStore;
 
+    @Resource
+    private QueryRewriter queryRewriter;
+
     /**
      * 和 RAG 知识库进行对话
      * @param message
@@ -102,16 +107,28 @@ public class EngineeringConsultantApp {
      * @return
      */
     public String doChatWithRag(String message, String chatId) {
+        // 查询重写
+        String rewrittenMessage = queryRewriter.doQueryRewrite(message);
+
         ChatResponse chatResponse = chatClient
                 .prompt()
-                .user(message)
+                // 使用改写后的查询
+                .user(rewrittenMessage)
                 .advisors(spec -> spec.param(CONVERSATION_ID, chatId))
                 // 开启日志，便于观察效果
                 .advisors(new MyLoggerAdvisor())
-                // 应用 RAG 知识库问答
-                .advisors(QuestionAnswerAdvisor.builder(ecAppVectorStore).build())
+                // 应用 RAG 知识库问答 （基于内存存储）
+//                .advisors(QuestionAnswerAdvisor.builder(ecAppVectorStore).build())
                 // 应用 RAG 检索增强服务 （基于 PGVector 向量存储）
                 //.advisors(QuestionAnswerAdvisor.builder(pgVectorVectorStore).build())
+                /**
+                 *  应用自定义的 RAG 检索增强服务 （文档查询器 + 上下文增强） 测试版本不兼容
+                 */
+//                .advisors(
+//                        ECAppRagCustomAdvisorFactory.createECAppRagCustomAdvisor(
+//                                ecAppVectorStore, "重构"
+//                        )
+//                )
                 .call()
                 .chatResponse();
         String content = chatResponse.getResult().getOutput().getText();

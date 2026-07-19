@@ -20,13 +20,23 @@ public class ECAppVectorStoreConfig {
     @Resource
     private ECAppDocumentLoader ecAppDocumentLoader;
 
+    @Resource
+    private MyTokenTextSplitter myTokenTextSplitter;
+
+    @Resource
+    private MyKeywordEnricher myKeywordEnricher;
+
     @Bean
     VectorStore ecAppVectorStore(EmbeddingModel dashscopeEmbeddingModel) {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(dashscopeEmbeddingModel)
                 .build();
         // 加载文档
         List<Document> documents = ecAppDocumentLoader.loadMarkdowns();
-        simpleVectorStore.add(documents);
+        // 自主切分文档
+//        List<Document> splitDocuments = myTokenTextSplitter.splitCustomized(documents);
+        // 自动补充
+        List<Document> enrichedDocuments = myKeywordEnricher.enrichDocuments(documents);
+        simpleVectorStore.add(enrichedDocuments);
         return simpleVectorStore;
     }
 }

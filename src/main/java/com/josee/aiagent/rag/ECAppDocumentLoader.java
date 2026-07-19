@@ -33,15 +33,18 @@ class ECAppDocumentLoader {
     public List<Document> loadMarkdowns() {
         List<Document> allDocuments = new ArrayList<>();
         try {
-            // 这里可以修改为你要加载的多个 Markdown 文件的路径模式
+            // 可以修改为要加载的多个 Markdown 文件的路径模式
             Resource[] resources = resourcePatternResolver.getResources("classpath:documents/*.md");
             for (Resource resource : resources) {
                 String fileName = resource.getFilename();
+                // 模拟提取文件名中的内容作为元信息标签
+                String status = fileName.substring(3, fileName.length() - 3);
                 MarkdownDocumentReaderConfig config = MarkdownDocumentReaderConfig.builder()
                         .withHorizontalRuleCreateDocument(true)
                         .withIncludeCodeBlock(false)
                         .withIncludeBlockquote(false)
                         .withAdditionalMetadata("filename", fileName)
+                        .withAdditionalMetadata("status", status)
                         .build();
                 MarkdownDocumentReader reader = new MarkdownDocumentReader(resource, config);
                 allDocuments.addAll(reader.get());
