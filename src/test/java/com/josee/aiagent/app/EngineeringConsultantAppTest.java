@@ -75,4 +75,13 @@ class EngineeringConsultantAppTest {
         Assertions.assertNotNull(answer);
     }
 
+    @Test
+    void doChatWithMcp() {
+        String chatId = UUID.randomUUID().toString();
+        // 测试图片搜索 MCP
+        String message = "Please help me searching some project structure pictures";
+        String answer =  engineeringConsultantApp.doChatWithMcp(message, chatId);
+        Assertions.assertNotNull(answer);
+    }
+
 }

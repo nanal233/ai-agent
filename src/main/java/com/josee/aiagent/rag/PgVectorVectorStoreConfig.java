@@ -1,7 +1,6 @@
 package com.josee.aiagent.rag;
 
 
-import com.josee.aiagent.app.EngineeringConsultantApp;
 import jakarta.annotation.Resource;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.BatchingStrategy;
@@ -41,8 +40,9 @@ public class PgVectorVectorStoreConfig {
                 .batchingStrategy(batchingStrategy)
                 .build();
         // 加载文档
-        List<Document> documents = ecAppDocumentLoader.loadMarkdowns();
-        vectorStore.add(documents);
+        // 暂时注释掉这两行，只保留了 VectorStore 的初始化，不重复插入数据（防止向量数据库中过多重复数据）
+        // List<Document> documents = ecAppDocumentLoader.loadMarkdowns();
+        // vectorStore.add(documents);
         return vectorStore;
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.tool.ToolCallback;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Component;
 
@@ -27,8 +28,9 @@ public class EngineeringConsultantApp {
 
     private final ChatClient chatClient;
 
-    private static final String SYSTEM_PROMPT = "扮演深耕后端架构与技术选型领域的资深工程师顾问。开场向用户表明身份，告知用户可以在这里咨询技术选型、架构设计或重构决策方面的困惑。" +
-            "围绕项目初期选型、现有系统重构、性能与扩展性瓶颈三种场景提问（非必须，若有需要则直接满足用户需求即可）：项目初期选型时询问团队规模、技术栈熟悉度及预期业务量级；" +
+    private static final String SYSTEM_PROMPT = "扮演深耕后端架构与技术选型领域的资深工程师顾问。你可以告知用户可以在这里咨询技术选型、架构设计或重构决策方面的困惑。" +
+            "若用户直接提问或让你完成某项任务，则在你的能力范围内直接回答用户问题或完成任务即可。" +
+            "你也可以围绕项目初期选型、现有系统重构、性能与扩展性瓶颈三种场景提问：项目初期选型时询问团队规模、技术栈熟悉度及预期业务量级；" +
             "现有系统重构时询问当前架构的痛点、历史包袱及可承受的迁移成本；" +
             "性能与扩展性瓶颈时询问具体的瓶颈指标、监控数据及已尝试过的优化手段。" +
             "引导用户描述具体的业务场景、团队现状及技术债务，以便给出可落地的技术选型建议和风险提示。";
@@ -149,6 +151,25 @@ public class EngineeringConsultantApp {
                 // 开启日志，便于观察效果
                 .advisors(new MyLoggerAdvisor())
                 .toolCallbacks(allTools)
+                .call()
+                .chatResponse();
+        String content = response.getResult().getOutput().getText();
+        log.info("content: {}", content);
+        return content;
+    }
+
+    // AI 工程师顾问调用 MCP 服务
+    @Resource
+    private ToolCallbackProvider toolCallbackProvider;
+
+    public String doChatWithMcp(String message, String chatId) {
+        ChatResponse response = chatClient
+                .prompt()
+                .user(message)
+                .advisors(spec -> spec.param(CONVERSATION_ID, chatId))
+                // 开启日志，便于观察效果
+                .advisors(new MyLoggerAdvisor())
+                .toolCallbacks(toolCallbackProvider)
                 .call()
                 .chatResponse();
         String content = response.getResult().getOutput().getText();
