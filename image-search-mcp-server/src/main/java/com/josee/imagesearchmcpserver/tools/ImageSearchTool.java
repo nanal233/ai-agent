@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class ImageSearchTool {
 
-    // 替换为 Pexels API 密钥（需从官网申请）
+    // Pexels API 密钥（需从官网申请）
     @Value("${pexels-search-api.api-key}")
     private String API_KEY;
 

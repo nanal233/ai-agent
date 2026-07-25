@@ -2,7 +2,7 @@ spring:
   application:
     name: image-search-mcp-server
   profiles:
-    active: stdio, local
+    active: sse, local
 server:
   port: 8127
 pexels-search-api:
