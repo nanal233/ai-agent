@@ -10,7 +10,7 @@ spring:
         distance-type: COSINE_DISTANCE
         max-document-batch-size: 10000 # Optional: Maximum number of documents per batch
     mcp:
-#      client:
+      client:
 #        sse:
 #          connections:
 #            server1:
