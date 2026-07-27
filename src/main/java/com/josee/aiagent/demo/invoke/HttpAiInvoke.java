@@ -25,7 +25,7 @@ public class HttpAiInvoke {
         parameters.set("result_format", "message");
 
         JSONObject body = new JSONObject();
-        body.set("model", "qwen3.5-plus");
+        body.set("model", "qwen-plus");
         body.set("input", input);
         body.set("parameters", parameters);
 
