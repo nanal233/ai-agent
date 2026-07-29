@@ -1,9 +1,18 @@
+# 可以编写生产环境的配置，会覆盖application.yml 配置
 spring:
   application:
     name: ai-agent
-  profiles:
-    active: local
   ai:
+    dashscope:
+      api-key: ${My_API_Key}
+      chat:
+        options:
+          model: qwen-plus
+  datasource:
+    url: jdbc:postgresql://pgm-7xv7tb3483628ekcro.rwlb.cn-guangzhou.rds.aliyuncs.com:5432/ai_agent
+    username: ${PG_USERNAME}
+    password: ${PG_PASSWORD}
+    driver-class-name: org.postgresql.Driver
 #    vectorstore:
 #      pgvector:
 #        index-type: HNSW
@@ -42,4 +51,4 @@ knife4j:
 
 # searchApi
 search-api:
-  api-key: My API Key
+  api-key: ${Search_API_Key}

@@ -8,6 +8,7 @@ import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class ECAppVectorStoreConfig {
     private MyKeywordEnricher myKeywordEnricher;
 
     @Bean
+    @Lazy
     VectorStore ecAppVectorStore(EmbeddingModel dashscopeEmbeddingModel) {
         SimpleVectorStore simpleVectorStore = SimpleVectorStore.builder(dashscopeEmbeddingModel)
                 .build();
